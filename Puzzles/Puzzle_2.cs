@@ -12,10 +12,8 @@ namespace AdventOfCode2020.Puzzles
             var input = Inputs.ExpensesReport;
             var counter = 0;
 
-            // sort the input
             Array.Sort(input);
 
-            // remove any items that are outside the calculable range
             var filteredList = input.Where(i => input[0] + input[1] + i <= matchingDate).ToArray();
 
             for (int outerCounter = 0; outerCounter < filteredList.Length; outerCounter++)
@@ -24,21 +22,21 @@ namespace AdventOfCode2020.Puzzles
                 {
                     var leftComparison = filteredList[outerCounter] + filteredList[innerCounter];
 
-                    // set the strting slice to be the upper group above the right comparison or below
-                    var searchable = leftComparison + filteredList[innerCounter] < matchingDate ? filteredList[(innerCounter + 1)..^0] : filteredList[(outerCounter+1)..(innerCounter - 1)];
-
-                    while (searchable.Length > 1)
+                    var range = (outerCounter, innerCounter:input.Length - 1);
+                    while (range.innerCounter - range.outerCounter > 1)
                     {
                         counter++;
-                        var rightComparison = searchable[searchable.Length / 2];
-                        if (leftComparison + rightComparison == matchingDate)
+                        var currentIndex = range.outerCounter + (range.innerCounter - range.outerCounter) / 2;
+                        var rightComparison = input[currentIndex];
+                        var sum = leftComparison + rightComparison;
+                        if (sum == matchingDate)
                         {
                             return $"{filteredList[outerCounter] * filteredList[innerCounter] * rightComparison} ({filteredList[outerCounter]} * {filteredList[innerCounter]} * {rightComparison}) {counter} iterations";
                         }
 
-                        searchable = leftComparison + rightComparison < matchingDate ? searchable[(searchable.Length / 2)..^0] : searchable[0..(searchable.Length / 2)];
+                        range = sum < matchingDate ? (currentIndex, range.innerCounter) : (range.outerCounter, currentIndex);
                     }
-                }               
+                }
             }
 
             return "No result";

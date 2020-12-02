@@ -13,17 +13,19 @@
 
             for (int leftCounter = 0; leftCounter < input.Length; leftCounter++)
             {
-                var searchable = input[leftCounter..^0];
+                var range = (leftCounter, input.Length - 1);
                 var leftComparison = input[leftCounter];
-                while (searchable.Length > 1)
+                while (range.Item2 - range.Item1 > 1)
                 {
-                    var rightComparison = searchable[searchable.Length / 2];
-                    if (leftComparison + rightComparison == matchingDate)
+                    var currentIndex = range.Item1 + (range.Item2 - range.Item1) / 2;
+                    var rightComparison = input[currentIndex];
+                    var sum = leftComparison + rightComparison;
+                    if (sum == matchingDate)
                     {
                         return $"{leftComparison * rightComparison}";
                     }
 
-                    searchable = leftComparison + rightComparison < matchingDate ? searchable[(searchable.Length / 2)..^0] : searchable[0..(searchable.Length / 2)];
+                    range = sum < matchingDate ? (currentIndex, range.Item2) : (range.Item1, currentIndex);
                 }
             }
 
