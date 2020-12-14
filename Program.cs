@@ -12,7 +12,7 @@
             var timer = Stopwatch.StartNew();
             for (int i = 0; i < 1; i++)
             {
-                output = new Puzzle_2().Run();
+                output = new Puzzle_4().Run();
             }
 
             timer.Stop();
