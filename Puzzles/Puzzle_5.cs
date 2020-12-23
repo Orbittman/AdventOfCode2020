@@ -6,7 +6,7 @@ namespace AdventOfCode2020.Puzzles
     {
         public string Run()
         {
-            var treeLayout = Inputs.GetInput("Puzzle5.txt").Select(x => x.ToCharArray()).ToArray();
+            var treeLayout = Inputs.GetInput("Day3.txt").Select(x => x.ToCharArray()).ToArray();
             var treeCount = 0;
             var mod = treeLayout[0].Length;
             var x = 0;

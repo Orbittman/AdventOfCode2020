@@ -8,7 +8,7 @@ namespace AdventOfCode2020.Puzzles
     {
         public string Run()
         {
-            var input = File.ReadLines("./Puzzle3.txt");
+            var input = File.ReadLines("./Day2.txt");
             var counter = 0;
             foreach(var item in input)
             {

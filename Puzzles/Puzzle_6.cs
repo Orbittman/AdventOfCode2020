@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 
 namespace AdventOfCode2020.Puzzles
 {
@@ -11,7 +8,7 @@ namespace AdventOfCode2020.Puzzles
 
         public Puzzle_6()
         {
-            treeLayout = Inputs.GetInput("Puzzle5.txt").Select(x => x.ToCharArray()).ToArray();
+            treeLayout = Inputs.GetInput("Day3.txt").Select(x => x.ToCharArray()).ToArray();
         }
 
         public string Run()
@@ -25,17 +22,12 @@ namespace AdventOfCode2020.Puzzles
             };
 
             var mod = treeLayout[0].Length;
-            long result = 0;
-            foreach(var route in inputs)
-            {
-                var collisions = TreeCollisions(treeLayout, mod, route[0], route[1]);
-                result = result == 0 ? collisions : result * collisions;
-            }
+            var result = inputs.Select(x => TreeCollisions(treeLayout, mod, x[0], x[1])).Aggregate((x, y) => x * y);
 
             return result.ToString();
         }
 
-        private int TreeCollisions(char[][] treeLayout, int mod, int x, int y)
+        private long TreeCollisions(char[][] treeLayout, int mod, int x, int y)
         {
             var treeCount = 0;
             var modCounter = 1;

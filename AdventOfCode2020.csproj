@@ -6,10 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Puzzle3.txt">
+    <None Update="Day2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Puzzle5.txt">
+    <None Update="Day3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Day4.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
