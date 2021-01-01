@@ -10,19 +10,23 @@ namespace AdventOfCode2020.Puzzles
     {
         private readonly string[] passportData;
         private readonly Regex pattern;
+        private readonly Dictionary<string, Func<string, bool>> validationRules;
+        private readonly string[] requiredFields;
+        private readonly IList<Dictionary<string, string>> parsedInput;
 
         public Puzzle_8()
         {
             passportData = Inputs.GetInput("Day4.txt").ToArray();
             pattern = new Regex(@"(\S+:\S+)", RegexOptions.Compiled);
+            validationRules = ValidationRules.Build();
+            requiredFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
+            parsedInput = ParseInput(passportData);
         }
 
-        public string Run()
+        private IList<Dictionary<string, string>> ParseInput(string[] input)
         {
-            int validPassportCount = 0;
+            var returnValue = new List<Dictionary<string, string>>();
             var passportString = new StringBuilder();
-            var requiredFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
-            var validationRules = ValidationRules.Build();
             for (int i = 0; i < passportData.Length; i++)
             {
                 if (i < passportData.Length && !string.IsNullOrWhiteSpace(passportData[i]))
@@ -31,25 +35,33 @@ namespace AdventOfCode2020.Puzzles
                 }
                 else
                 {
-                    var passportFields = pattern
+                    returnValue.Add(pattern
                         .Matches(passportString.ToString())
-                        .Select(m =>
-                        new
-                        {
-                            Key = m.Value.Substring(0, m.Value.IndexOf(':')),
-                            Value = m.Value[(m.Value.IndexOf(':') + 1)..]
-                        });
-
-
-                    if (requiredFields.All(x => passportFields.Any(rf => rf.Key == x)) &&
-                        passportFields.All(rf =>
-                            !validationRules.TryGetValue(rf.Key, out var validationRule)
-                            || validationRule(rf.Value)))
-                    {
-                        validPassportCount++;
-                    }
+                        .Select(x => x.Value)
+                        .ToDictionary(
+                            Key => Key.Substring(0, Key.IndexOf(':')),
+                            Value => Value[(Value.IndexOf(':') + 1)..]
+                        ));
 
                     passportString.Clear();
+                }
+            }
+
+            return returnValue;
+        }
+
+        public string Run()
+        {
+            int validPassportCount = 0;
+            var passportString = new StringBuilder();
+            for (int i = 0; i < parsedInput.Count; i++)
+            {
+                if (requiredFields.All(x => parsedInput[i].ContainsKey(x)) &&
+                      parsedInput[i].All(rf =>
+                          !validationRules.TryGetValue(rf.Key, out var validationRule)
+                          || validationRule(rf.Value)))
+                {
+                    validPassportCount++;
                 }
             }
 
